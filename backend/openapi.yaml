@@ -1,0 +1,212 @@
+openapi: 3.0.0
+info:
+  description: "This is the short description of Trasnpack interface endpoints."
+  version: 1.0.0
+  title: Transacpack interface
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: szaloki.sandor@selester.hu
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: api
+    description: Checking service availability
+  - name: api-docs
+    description: Get this documentation from server
+  - name: data
+    description: get reports data 
+  - name: params
+    description: get parameters for login to Trans-pack API 
+  - name: login
+    description: send the login request to Trans-pack API 
+  - name: shipment
+    description: send shipment to Trans-pack API 
+  - name: shipmentget
+    description: get shipments from Trans-pack API 
+paths:
+  /api/heartbeat:
+    get:
+      tags:
+        - api
+      summary: Checking service availability
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/heartbeat'
+  /api-docs:
+    get:
+      tags:
+        - api-docs
+      summary: Get this documentation
+      responses:
+        "200":
+          description: OK
+  /data/:
+    get:
+      tags:
+        - data
+      summary: Get data from SQL-Server
+      parameters:
+        - in: header
+          name: select
+          description: list of fields
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: top
+          description: max amount of datarows
+          schema:
+            type: integer
+        - in: header
+          name: from
+          description: name of the SQL-datatable / view
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: where
+          description: WHERE segment of the sql statement
+          schema:
+            type: string
+        - in: header
+          name: groupby
+          description: GROUP BY segment of the sql statement
+          schema:
+            type: string
+        - in: header
+          name: orderby
+          description: ORDER BY segment of the sql statement
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: language
+          description: Language of the language-sensitive data (only 'H' is supported at the moment.)
+          schema:
+            type: string
+        - in: header
+          name: pageNo
+          description: The page of the list.)
+          schema:
+            type: string
+        - in: header
+          name: rowsperpage
+          description: Count of records on a page.)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Downloads data from the SQL-Server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  columns:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/column'
+                  data:
+                    type: array
+                    items:
+                      type: object
+  /params:
+    get:
+      tags:
+        - params
+      summary: Get params for Trans-pack token request
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/column'
+  /login:
+    get:
+      tags:
+        - login
+      summary: Login into Transpack
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/column'
+  /shipment:
+    get:
+      tags:
+        - shipment
+      summary: Login into Transpack
+      parameters:
+        - in: header
+          name: ORD_ID
+          description: ID of shipmnet
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/column'
+  /allshipment:
+    get:
+      tags:
+        - shipmentget
+      summary: download shipments from Trans-pack
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/column'
+  /shipmentbyid:
+    get:
+      tags:
+        - shipmentget
+      summary: download shipments from Trans-pack
+      parameters:
+        - in: header
+          name: shipment_id
+          description: ID of shipmnet on Trans-pack side
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/column'
+
+components:
+  schemas:
+    heartbeat:
+      type: object
+      properties:
+        heartbeat:
+          type: boolean
+        version:
+          type: string
+        dbConnection:
+          type: boolean
+    column:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
