@@ -1,0 +1,9 @@
+Alpozíció szintű hívás (most főpozíció)
+megfelelő válasz esetén státusz váltás SelEXPED oldalon
+hiba esetén a hibaüzenet beírása SelEXPED oldalra
+
+Alpozíció státuszok felvétele a definíció szerint
+Alapértelmezett Alpozíció státusz beállítása
+Manuális státusz váltás R00005-re: akkor API hívás
+Package_number tagba a ref.nr és shipment nr kerüljön a definíció szerint
+
